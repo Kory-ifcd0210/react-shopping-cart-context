@@ -1,15 +1,16 @@
-import React from "react";
+import React, {useContext}from "react";
+import ProductsContext from "../../Context/ProductsContext";
 
 import ItemCard from "../ItemCard";
 
 function ProductsListing({
-  products,
   handleDownVote,
   handleUpVote,
   handleSetFavorite,
   handleAddToCart,
   ...props
 }) {
+  const {products} = useContext(ProductsContext);
   return (
     <section className="row" {...props}>
       {products.map((product) => (

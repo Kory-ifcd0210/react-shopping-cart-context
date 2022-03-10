@@ -3,11 +3,13 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
 import NewProduct from "./pages/NewProduct";
+import Step1 from "./pages/Checkout/Step1";
 
 import * as api from "./api";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 import loadLocalStorageItems from "./utils/loadLocalStorageItems";
+import ProductsContextProvider from "./ContextProvider/ProductsContextProvider";
 
 function buildNewCartItem(cartItem) {
   if (cartItem.quantity >= cartItem.unitsInStock) {
@@ -30,6 +32,7 @@ const PRODUCTS_LOCAL_STORAGE_KEY = "react-sc-state-products";
 const CART_ITEMS_LOCAL_STORAGE_KEY = "react-sc-state-cart-items";
 
 function App() {
+  // create 2 states
   const [products, setProducts] = useState(() =>
     loadLocalStorageItems(PRODUCTS_LOCAL_STORAGE_KEY, []),
   );
@@ -37,17 +40,20 @@ function App() {
     loadLocalStorageItems(CART_ITEMS_LOCAL_STORAGE_KEY, []),
   );
 
+  // save in the localStorage the state values
   useLocalStorage(products, PRODUCTS_LOCAL_STORAGE_KEY);
   useLocalStorage(cartItems, CART_ITEMS_LOCAL_STORAGE_KEY);
 
+  // use error const
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
 
+
   useEffect(() => {
     if (products.length === 0) {
       setIsLoading(true);
-
+      // when the list product is empty
       api
         .getProducts()
         .then((data) => {
@@ -62,6 +68,7 @@ function App() {
     }
   }, []);
 
+  // Add products to cart
   function handleAddToCart(productId) {
     const prevCartItem = cartItems.find((item) => item.id === productId);
     const foundProduct = products.find((product) => product.id === productId);
@@ -81,7 +88,7 @@ function App() {
           quantity: item.quantity + 1,
         };
       });
-
+        // edit the cartItem state
       setCartItems(updatedCartItems);
       return;
     }
@@ -90,6 +97,7 @@ function App() {
     setCartItems((prevState) => [...prevState, updatedProduct]);
   }
 
+  // change the quantity
   function handleChange(event, productId) {
     const updatedCartItems = cartItems.map((item) => {
       if (item.id === productId && item.quantity <= item.unitsInStock) {
@@ -102,14 +110,17 @@ function App() {
       return item;
     });
 
+    // edit the cart state item
     setCartItems(updatedCartItems);
   }
 
+  // remove an item
   function handleRemove(productId) {
     const updatedCartItems = cartItems.filter((item) => item.id !== productId);
 
     setCartItems(updatedCartItems);
   }
+
 
   function handleDownVote(productId) {
     const updatedProducts = products.map((product) => {
@@ -133,6 +144,7 @@ function App() {
       return product;
     });
 
+    // edit the products list
     setProducts(updatedProducts);
   }
 
@@ -175,33 +187,37 @@ function App() {
     setProducts(updatedProducts);
   }
 
-  function saveNewProduct(newProduct) {
-    setProducts((prevState) => [newProduct, ...prevState]);
-  }
+  // function saveNewProduct(newProduct) {
+  //   setProducts((prevState) => [newProduct, ...prevState]);
+  // }
 
   return (
     <BrowserRouter>
-      <Switch>
-        <Route path="/new-product">
-          <NewProduct saveNewProduct={saveNewProduct} />
-        </Route>
-        <Route path="/" exact>
-          <Home
-            fullWidth
-            cartItems={cartItems}
-            products={products}
-            isLoading={isLoading}
-            hasError={hasError}
-            loadingError={loadingError}
-            handleDownVote={handleDownVote}
-            handleUpVote={handleUpVote}
-            handleSetFavorite={handleSetFavorite}
-            handleAddToCart={handleAddToCart}
-            handleRemove={handleRemove}
-            handleChange={handleChange}
-          />
-        </Route>
-      </Switch>
+      <ProductsContextProvider>
+        <Switch>
+          <Route path="/new-product">
+            <NewProduct />
+          </Route>
+          <Route path="/" exact>
+            <Home
+              fullWidth
+              cartItems={cartItems}
+              isLoading={isLoading}
+              hasError={hasError}
+              loadingError={loadingError}
+              handleDownVote={handleDownVote}
+              handleUpVote={handleUpVote}
+              handleSetFavorite={handleSetFavorite}
+              handleAddToCart={handleAddToCart}
+              handleRemove={handleRemove}
+              handleChange={handleChange}
+              />
+          </Route>
+          <Route path="/checkout/step-1">
+            <Step1 />
+          </Route>
+        </Switch>
+      </ProductsContextProvider>
     </BrowserRouter>
   );
 }

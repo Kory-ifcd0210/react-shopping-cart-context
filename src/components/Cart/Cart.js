@@ -1,5 +1,6 @@
 import React from "react";
 
+import { NavLink } from "react-router-dom";
 import ShoppingCartItem from "../ShoppingCartItem";
 import Button from "../Button";
 
@@ -11,7 +12,7 @@ function getCartTotal(cart) {
 
 function Cart({ cartItems, handleRemove, handleChange, ...props }) {
   return (
-    <aside {...props}>
+    <aside {...props} data-testid="cart">
       <div className="row flex-column">
         <div className="col shopping__cart__header">
           <h2 className="h3 mt-2">Shopping Cart</h2>
@@ -49,7 +50,9 @@ function Cart({ cartItems, handleRemove, handleChange, ...props }) {
               <hr />
             </div>
             <div className="col">
-              <Button>Checkout</Button>
+              <NavLink to="/checkout/step-1">
+                <Button disabled={!cartItems.length > 0}>Checkout</Button>
+              </NavLink>
             </div>
           </div>
         </div>

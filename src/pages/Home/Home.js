@@ -5,7 +5,6 @@ import Cart from "../../components/Cart";
 import withLayout from "../../hoc/withLayout";
 
 function Home({
-  products,
   cartItems,
   isLoading,
   hasError,
@@ -47,7 +46,6 @@ function Home({
           {!isLoading && !hasError && (
             <div className="col col-12">
               <ProductsListing
-                products={products}
                 handleDownVote={handleDownVote}
                 handleUpVote={handleUpVote}
                 handleSetFavorite={handleSetFavorite}
