@@ -4,12 +4,15 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import NewProduct from "./pages/NewProduct";
 import Step1 from "./pages/Checkout/Step1";
+import Step2 from "./pages/Checkout/Step2";
 
 import * as api from "./api";
 
 import useLocalStorage from "./hooks/useLocalStorage";
 import loadLocalStorageItems from "./utils/loadLocalStorageItems";
 import ProductsContextProvider from "./ContextProvider/ProductsContextProvider";
+import PersonDataContextProvider from "./ContextProvider/PersonDataContextProvider";
+import BillingDetailContextProvider from "./ContextProvider/BillingDetailContextProvider";
 
 function buildNewCartItem(cartItem) {
   if (cartItem.quantity >= cartItem.unitsInStock) {
@@ -49,7 +52,6 @@ function App() {
   const [hasError, setHasError] = useState(false);
   const [loadingError, setLoadingError] = useState(null);
 
-
   useEffect(() => {
     if (products.length === 0) {
       setIsLoading(true);
@@ -88,7 +90,7 @@ function App() {
           quantity: item.quantity + 1,
         };
       });
-        // edit the cartItem state
+      // edit the cartItem state
       setCartItems(updatedCartItems);
       return;
     }
@@ -120,7 +122,6 @@ function App() {
 
     setCartItems(updatedCartItems);
   }
-
 
   function handleDownVote(productId) {
     const updatedProducts = products.map((product) => {
@@ -194,29 +195,36 @@ function App() {
   return (
     <BrowserRouter>
       <ProductsContextProvider>
-        <Switch>
-          <Route path="/new-product">
-            <NewProduct />
-          </Route>
-          <Route path="/" exact>
-            <Home
-              fullWidth
-              cartItems={cartItems}
-              isLoading={isLoading}
-              hasError={hasError}
-              loadingError={loadingError}
-              handleDownVote={handleDownVote}
-              handleUpVote={handleUpVote}
-              handleSetFavorite={handleSetFavorite}
-              handleAddToCart={handleAddToCart}
-              handleRemove={handleRemove}
-              handleChange={handleChange}
+        <PersonDataContextProvider>
+          <BillingDetailContextProvider>
+          <Switch>
+            <Route path="/new-product">
+              <NewProduct />
+            </Route>
+            <Route path="/" exact>
+              <Home
+                fullWidth
+                cartItems={cartItems}
+                isLoading={isLoading}
+                hasError={hasError}
+                loadingError={loadingError}
+                handleDownVote={handleDownVote}
+                handleUpVote={handleUpVote}
+                handleSetFavorite={handleSetFavorite}
+                handleAddToCart={handleAddToCart}
+                handleRemove={handleRemove}
+                handleChange={handleChange}
               />
-          </Route>
-          <Route path="/checkout/step-1">
-            <Step1 />
-          </Route>
-        </Switch>
+            </Route>
+            <Route path="/checkout/step-1">
+              <Step1 />
+            </Route>
+            <Route path="/checkout/step-2">
+              <Step2 />
+            </Route>
+          </Switch>
+          </BillingDetailContextProvider>
+        </PersonDataContextProvider>
       </ProductsContextProvider>
     </BrowserRouter>
   );
