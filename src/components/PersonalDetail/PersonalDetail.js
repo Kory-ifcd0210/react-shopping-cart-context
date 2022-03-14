@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, {useState, useContext} from "react";
 import { Redirect } from "react-router-dom";
 import { useFormik } from "formik";
@@ -5,12 +6,22 @@ import { v4 as uuid } from "uuid";
 
 import Button from "../Button";
 import Input from "../Input";
+import Cart from "../Cart";
+import loadLocalStorageItems from "../../utils/loadLocalStorageItems";
+
+
 
 import PersonDataContext from "../../Context/PersonDataContext";
 import personalDetailSchema from "./PersonaDetail-schema";
 
 
 function PersonalDetail() {
+  const CART_ITEMS_LOCAL_STORAGE_KEY = "react-sc-state-cart-items";
+
+    const [cartItems, setCartItems] = useState(() =>
+    loadLocalStorageItems(CART_ITEMS_LOCAL_STORAGE_KEY, []),
+    );
+
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const { savePersonData, data } = useContext(PersonDataContext)
 
@@ -34,6 +45,10 @@ function PersonalDetail() {
   });
   return (
     <>
+    <div className="row">
+
+    
+    <div className="col"> 
       <form onSubmit={formik.handleSubmit}>
         <Input
           type="text"
@@ -78,6 +93,15 @@ function PersonalDetail() {
       </form>
 
       {hasSubmitted && <Redirect to="/checkout/step-2" />}
+      </div>
+
+      <div className="col">
+      <Cart
+        className="col col-4"
+        cartItems={cartItems}
+      />
+      </div>
+      </div>
     </>
   );
 }
