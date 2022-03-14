@@ -5,6 +5,8 @@ import Home from "./pages/Home";
 import NewProduct from "./pages/NewProduct";
 import Step1 from "./pages/Checkout/Step1";
 import Step2 from "./pages/Checkout/Step2";
+import Step3 from "./pages/Checkout/Step3";
+import Step4 from "./pages/Checkout/Step4";
 
 import * as api from "./api";
 
@@ -13,6 +15,7 @@ import loadLocalStorageItems from "./utils/loadLocalStorageItems";
 import ProductsContextProvider from "./ContextProvider/ProductsContextProvider";
 import PersonDataContextProvider from "./ContextProvider/PersonDataContextProvider";
 import BillingDetailContextProvider from "./ContextProvider/BillingDetailContextProvider";
+import PaymentContextProvider from "./ContextProvider/PaymentContextProvider";
 
 function buildNewCartItem(cartItem) {
   if (cartItem.quantity >= cartItem.unitsInStock) {
@@ -197,37 +200,44 @@ function App() {
       <ProductsContextProvider>
         <PersonDataContextProvider>
           <BillingDetailContextProvider>
-          <Switch>
-            <Route path="/new-product">
-              <NewProduct />
-            </Route>
-            <Route path="/" exact>
-              <Home
-                fullWidth
-                cartItems={cartItems}
-                isLoading={isLoading}
-                hasError={hasError}
-                loadingError={loadingError}
-                handleDownVote={handleDownVote}
-                handleUpVote={handleUpVote}
-                handleSetFavorite={handleSetFavorite}
-                handleAddToCart={handleAddToCart}
-                handleRemove={handleRemove}
-                handleChange={handleChange}
-              />
-            </Route>
-            <Route path="/checkout/step-1">
-              <Step1 />
-            </Route>
-            <Route path="/checkout/step-2">
-              <Step2 />
-            </Route>
-          </Switch>
+            <PaymentContextProvider>
+            <Switch>
+              <Route path="/new-product">
+                <NewProduct />
+              </Route>
+              <Route path="/" exact>
+                <Home
+                  fullWidth
+                  cartItems={cartItems}
+                  isLoading={isLoading}
+                  hasError={hasError}
+                  loadingError={loadingError}
+                  handleDownVote={handleDownVote}
+                  handleUpVote={handleUpVote}
+                  handleSetFavorite={handleSetFavorite}
+                  handleAddToCart={handleAddToCart}
+                  handleRemove={handleRemove}
+                  handleChange={handleChange}
+                />
+              </Route>
+              <Route path="/checkout/step-1">
+                <Step1 />
+              </Route>
+              <Route path="/checkout/step-2">
+                <Step2 />
+              </Route>
+              <Route path="/checkout/step-3">
+                <Step3 />
+              </Route>
+              <Route path="/checkout/order-summary">
+                <Step4 />
+              </Route>
+            </Switch>
+          </PaymentContextProvider>
           </BillingDetailContextProvider>
         </PersonDataContextProvider>
       </ProductsContextProvider>
     </BrowserRouter>
   );
 }
-
 export default App;

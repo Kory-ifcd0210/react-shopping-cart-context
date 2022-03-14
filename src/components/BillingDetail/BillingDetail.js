@@ -92,7 +92,7 @@ function BillingDetail() {
                 <Link to="/checkout/step-1" className="btn btn-primary">Back</Link>
             </form>
 
-            {hasSubmitted && <Redirect to="/" />}
+            {hasSubmitted && <Redirect to="/checkout/step-3" />}
         </>
     );
 }

@@ -1,18 +1,18 @@
-// import React from "react";
+import React from "react";
 
-// // import BillingDetail from "../../components/BillingDetail/BillingDetail";
-// // import Cart from "../../components/Cart";
+import Payment from "../../components/Payment/Payment";
+// import Cart from "../../components/Cart";
 
-// import withLayout from "../../hoc/withLayout";
+import withLayout from "../../hoc/withLayout";
 
 
-// function Step3(){
-//     return (
-//         <>
-//             <Payment/>
-//             {/* <Cart/> */}
-//         </>
-//     )
-// }
+function Step3(){
+    return (
+        <>
+            <Payment/>
+            {/* <Cart/> */}
+        </>
+    )
+}
 
-// export default withLayout(Step3);
+export default withLayout(Step3);
